@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import string
-fuhao={'~','&','|','->','<->'}
-fuhao2={'*','&','|','>','='}
+fuhao={'~','&','|','^','->','<->'}
+fuhao2={'*','&','|','^','>','='}
 fuhao2=list(fuhao2)
 
 _DEBUG=False
@@ -16,7 +16,7 @@ def main():
             k=INPUT.index('<->')
             INPUT=list(INPUT)
             del INPUT[k+1]
-            del INPUT[k+2]
+            del INPUT[k+1]
             INPUT[k]='='
             inputs=''
             for i in INPUT:
@@ -87,13 +87,20 @@ def main():
                 orderi=fuhao2.index(i)
                 ordera=fuhao2.index(zhan[len(zhan)-1])
                 if orderi>ordera:
-                    b=zhan.pop
-                    while b!='(' and b!=')':
+                    b=zhan.pop()
+                    while b in fuhao2:
                         try:
                             houzhui.append(b)
-                            b=zhan.pop
+                            b=zhan.pop()
                         except:
                             zhan.append(i)
+                            break
+                    if b=='(' or b==')':
+                        zhan.append(b)
+                        zhan.append(i)
+                
+
+                    
                 else :
                     zhan.append(i)
     while 1:
@@ -131,7 +138,7 @@ def calculator(houzhui_fuzhihou):
         elif i=='^':
             a1=result.pop()
             a2=result.pop()
-            a=a1^a2
+            a=(a1+a2)%2
             result.append(a)
         elif i=='*':
             a1=result.pop()
@@ -142,14 +149,14 @@ def calculator(houzhui_fuzhihou):
             a1=result.pop()#第二个操作数
             a2=result.pop()#第一个操作数
             if(a2==True and a1==False):
-                a==False
+                a=False
             else: 
-                a==True
+                a=True
             result.append(a)
         elif i=='=':
             a1=result.pop()
             a2=result.pop()
-            a=~(a1 ^ a2)
+            a=((a1 ^ a2)+1)%2
             result.append(a) 
     return result.pop()
 
@@ -185,6 +192,6 @@ def printf(results,bianliangbiao):
         k=i.get("result")
         print "%9d"%k
 
-
-main()
+if __name__=="__main__":
+    main()
 
