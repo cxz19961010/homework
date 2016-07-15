@@ -1,7 +1,8 @@
 # -*- coding:utf-8 -*-
 import string
-fuhao={'~','&','|','^','->','<->'}
-fuhao2={'*','&','|','^','>','='}
+import sys
+fuhao=('~','&','|','^','->','<->')
+fuhao2=('*','&','|','^','>','=')
 fuhao2=list(fuhao2)
 
 _DEBUG=False
@@ -9,7 +10,7 @@ def main():
     if _DEBUG==True:
         import pdb
         pdb.set_trace()
-    INPUT=raw_input("请输入表达式，与使用&，或使用|，非使用～，异或使用^，蕴含使用->,等价使用<->\n>> ")
+    INPUT=raw_input("请输入表达式，与使用&，或使用|，非使用～，异或使用^，蕴含使用->或>,等价使用<->或=,变量请用单个字母\n>> ")
     INPUT2=[]
     while 1:
         try:
@@ -118,7 +119,12 @@ def main():
     bianliangzhi=[]#用来储存变量的值
     results=[]#用嵌套的列表来保存结果,其中元素均为字典
     xunhuan(0,houzhui,bianliang,bianliangzhi,results)
-    printf(results,bianliang)
+    dict_tihuan={}
+    if len(sys.argv)>1 and sys.argv[1]=='-t':
+
+        dict_tihuan=tihuan(INPUT2)
+
+    printf(results,bianliang,INPUT2,dict_tihuan)
 def calculator(houzhui_fuzhihou):
     
     result=[];
@@ -179,10 +185,47 @@ def xunhuan(bianlianghao,houzhui,bianliang,bianliangzhi,results):
         value["result"]=key
         results.append(value)
         
+def tihuan(INPUT2):
+    print ("请以a：b格式输入要替换的字符，a为原字符，b为替换字符,输入一次空行结束输入")
+    a=raw_input('>> ')
+    dict_tihuan={}
+    while a!='':
+        try :
+            a=a.split(':')
+            dict_tihuan[a[0]]=a[1]
+            a=raw_input('>> ')
+        except:
+            print 'input error'
+    return dict_tihuan
 
-def printf(results,bianliangbiao):
+            
+def printf(results,bianliangbiao,INPUT2,dict_tihuan):
+
+    for i in INPUT2:
+        if (i<='z' and i>='a')or (i<='9'and i>='0'):
+            print dict_tihuan.get(i,i),
+
+        elif i=='~':
+            print   '┐',
+        elif i=='&':
+            print '∧',
+        elif i=='|':
+            print '∨',
+        elif i=='^':
+            print '⊕',
+        elif i=='=':
+            print '↔',
+        elif i=='>':
+            print '→',
+        elif i==True:
+            print 1,
+        elif i==False:
+            print 0,
+        elif i=='(' or i==')':
+            print i,
+    print ''
     for j in bianliangbiao:
-        print "%4s"%j,
+        print "%4s"%(dict_tihuan.get(j,j)),
     print("   result")
 
     for i in results:
@@ -193,5 +236,7 @@ def printf(results,bianliangbiao):
         print "%9d"%k
 
 if __name__=="__main__":
-    main()
+    while 1:
+        main()
+
 
